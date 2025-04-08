@@ -1,29 +1,46 @@
 public class BackpackProblem {
-    public static void main(String[] args) {
-        int N = 4;
-        int C = 5;
-        Item[] itens = new Item[N + 1];
-        itens[1] = new Item(5, 2);
-        itens[2] = new Item(2, 4);
-        itens[3] = new Item(2, 2);
-        itens[4] = new Item(1, 3);
 
-       int maximovalor = backPackPD(N, C, itens);
-       System.out.println(maximovalor);
+    // Função recursiva para resolver o problema da mochila usando backtracking (sem programação dinâmica)
+    public static int mochila(Item[] itens, int capacidade, int i, int pesoAtual, int valorAtual) {
+        // Caso base: quando todos os itens foram avaliados
+        if (i == itens.length) {
+            return valorAtual;  // Retorna o valor acumulado até o momento
+        }
+
+        // Caso 1: Não incluir o item atual
+        int naoIncluir = mochila(itens, capacidade, i + 1, pesoAtual, valorAtual);
+
+        // Caso 2: Incluir o item atual, se o peso permitir
+        int incluir = 0;
+        if (pesoAtual + itens[i].peso <= capacidade) {
+            incluir = mochila(itens, capacidade, i + 1, pesoAtual + itens[i].peso, valorAtual + itens[i].valor);
+        }
+
+        // Retorna o melhor valor entre incluir ou não o item
+        return Math.max(naoIncluir, incluir);
     }
 
-    public static int backPackPD(int n, int c, Item[] itens){
-        int[][] maxTab = new int[n + 1][c + 1];
-        for(int i=1; i <= n; i++){
-            for(int j=1; j <= c; j++){
-                if(itens[i].getPeso() <= j){
-                    maxTab[i][j] = Math.max(maxTab[i-1][j], itens[i].getValor() + maxTab[i-1][j-itens[i].getPeso()]);
-                }
-                else{
-                    maxTab[i][j] = maxTab[i-1][j];
-                }
-            }
-        }
-        return maxTab[n][c];
+    public static void main(String[] args) {
+        // Criando um conjunto de itens
+        Item[] itens = {
+            new Item(23, 92),
+            new Item(31, 57),
+            new Item(29, 49),
+            new Item(44, 68),
+            new Item(53, 60),
+            new Item(38, 43),
+            new Item(63, 67),
+            new Item(85, 84),
+            new Item(89, 87),
+            new Item(82, 72)
+        };
+
+        int capacidade = 165;  // Capacidade da mochila
+        
+        // Chamando a função mochila (iniciando a recursão com o primeiro item)
+        int valorMaximo = mochila(itens, capacidade, 0, 0, 0);
+        
+        // Exibindo o resultado
+        System.out.println("Valor máximo que pode ser carregado na mochila: " + valorMaximo);
     }
 }
