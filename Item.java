@@ -22,4 +22,9 @@ public class Item {
     public void setValor(int valor) {
         this.valor = valor;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Peso: %d, Valor: %d", peso, valor);
+    }
 }
